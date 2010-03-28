@@ -6,11 +6,11 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
 	<title>jrockway/ibuffer-git @ GitHub</title>
-	
+
 	<style type="text/css">
 		body {
   		margin-top: 1.0em;
-  		background-color: #37eba8;
+  		background-color: #ddd;
 		  font-family: "Helvetica,Arial,FreeSans";
   		color: #000000;
     }
@@ -29,8 +29,9 @@
 		pre { background: #000; color: #fff; padding: 15px;}
     hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
     .footer { text-align:center; padding-top:30px; font-style: italic; }
+    iframe { width: 100%; height: 600px; }
 	</style>
-	
+
 </head>
 
 <body>
@@ -49,20 +50,43 @@
       <span class="small">by <a href="http://github.com/jrockway">jrockway</a></span></h1>
 
     <div class="description">
-      Git integration for Emacs' Ibuffer
+      Integrate git and Ibuffer!
     </div>
 
-    <h2>Dependencies</h2>
-<p>Emacs 23.1</p>
-<h2>Install</h2>
-<p>Copy ibuffer-git.el to a convenient location, (require 'ibuffer-git), and add git-status or git-status-mini to ibuffer-formats.</p>
-<h2>License</h2>
-<p>GPL3</p>
-<h2>Authors</h2>
-<p>Jonathan Rockway (jon@jrock.us)<br/><br/>      </p>
-<h2>Contact</h2>
-<p>Jonathan Rockway (jon@jrock.us)</p>
+<h2>Details</h2>
+<p><code>ibuffer-git</code> is an Emacs extension that shows git
+status information in Ibuffer.  There is the
+larger <code>git-status</code> column, which shows you a full
+diffstat, and a one-character <code>git-status-mini</code> column
+that concisely shows the git status; <code>+</code> if you mostly
+added, <code>-</code> if you mostly deleted, and nothing if the file
+is not modified.</p>
 
+<p>Now you don't have to trek all the way over to magit just to see
+  which files you've recently changed!</a>
+
+<h2>Screenshot</h2>
+<p>Here it is in action, thanks to <code>htmlize.el</code>.
+  The <code>G</code> column is the mini status, and the <code>Git</code> column is
+  the full diffstat.</p>
+<iframe src="http://jrockway.github.com/ibuffer-git/screenshot.html">
+</iframe>
+<p>
+The ibuffer format to generate the above is:
+<code><pre>
+(mark modified read-only git-status-mini " "
+      (name 18 18 :left :elide)
+      " "
+      (size 9 -1 :right)
+      " "
+      (mode 16 16 :left :elide)
+      " "
+      (eproject 16 16 :left :elide)
+      " "
+      (git-status 8 8 :left)
+      " " filename-and-process)
+</pre></code>
+</p>
 
     <h2>Download</h2>
     <p>
@@ -75,12 +99,19 @@
       <pre>$ git clone git://github.com/jrockway/ibuffer-git</pre>
     </p>
 
+<h2>Install</h2>
+Install like any elisp extension.  <code>(require 'ibuffer-git)</code>
+somewhere, then customize <code>ibuffer-formats</code> to
+include <code>git-status</code> or <code>git-status-mini</code> where
+you like.  You can also <code>M-x customize-group ibuffer-git</code>
+to tweak some settings!
+<p></p>
+
     <div class="footer">
       get the source code on GitHub : <a href="http://github.com/jrockway/ibuffer-git">jrockway/ibuffer-git</a>
     </div>
 
   </div>
 
-  
 </body>
 </html>
