@@ -59,7 +59,7 @@ FILENAME must be a filename."
   :group 'ibuffer-git)
 
 (defcustom ibuffer-git-column-length 8
-  "How big your non-mini git status column in Ibuffer will be.  You might want to add one to this for the actual Ibuffer column spec so you have a space between the end of the +- string and the next column."
+  "How big your non-mini git status column in Ibuffer will be."
   :group 'ibuffer-git
   :type 'integer)
 
