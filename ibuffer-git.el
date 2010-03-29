@@ -32,6 +32,7 @@
 ;;; Code:
 
 (require 'ibuffer)
+(require 'cl)
 
 (defgroup ibuffer-git nil
   "Git integration for Ibuffer"
