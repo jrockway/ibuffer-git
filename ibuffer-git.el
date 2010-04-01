@@ -44,7 +44,8 @@
 FILENAME must be a filename."
   (condition-case e
       (let* ((default-directory (file-name-directory filename))
-             (res (car (process-lines "git" "diff" "--numstat" filename))))
+             (res (car (process-lines "git" "diff" "--numstat"
+                                      (file-name-nondirectory filename)))))
         (cond ((not res) (cons 0 0))
               ((string-match "^\\([0-9]+\\)\t\\([0-9]+\\)\t" res)
                (cons (read (match-string 1 res)) (read (match-string 2 res))))
