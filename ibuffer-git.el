@@ -69,7 +69,7 @@ FILENAME must be a filename."
   "Format the results of `ibuffer-git-check-status' for display in the ibuffer.
 
 Argument RES is a cons cell in the format `(ADD . DEL)'."
-  (if (not res) nil
+  (if (not res) ""
     (destructuring-bind (add . del) res
       (cond ((and (= 0 add) (= 0 del)) "")
             (t (let* ((add-ratio (/ (float add) (+ add del)))
@@ -81,10 +81,29 @@ Argument RES is a cons cell in the format `(ADD . DEL)'."
                   (propertize (concat (loop for i from 1 to (min del minus) collect ?-))
                               'face 'ibuffer-git-del-face))))))))
 
-(define-ibuffer-column git-status (:name "Git" :inline t)
-  (ibuffer-git-format-result
-   (ignore-errors (when (buffer-file-name)
-                    (ibuffer-git-check-status (buffer-file-name))))))
+(defvar ibuffer-git-status-keymap (make-sparse-keymap)
+  "Keymap for clicking on the diffs")
+
+(define-key ibuffer-git-status-keymap (kbd "<mouse-2>") #'ibuffer-git-visit-diff)
+
+(defun ibuffer-git-visit-diff (event)
+  "Show the detailed diff for the ibuffer entry at the point.
+Argument EVENT is the mouse event that triggered us."
+  (interactive "e")
+    (with-current-buffer
+        (progn (mouse-set-point event)
+               (ibuffer-current-buffer t))
+      (vc-diff nil t)))
+
+(define-ibuffer-column git-status
+  (:name "Git"
+   :inline t
+   :props ('mouse-face 'highlight
+           'keymap ibuffer-git-status-keymap
+           'help-echo "mouse-2: see detailed diff"))
+   (ibuffer-git-format-result
+    (ignore-errors (when (buffer-file-name)
+                     (ibuffer-git-check-status (buffer-file-name))))))
 
 
 (define-ibuffer-column git-status-mini (:name "G" :inline t)
