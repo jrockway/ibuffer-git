@@ -112,8 +112,8 @@ Argument EVENT is the mouse event that triggered us."
                            (ibuffer-git-check-status (buffer-file-name))))
           (cons 0 0))
     (cond ((= 0 (+ a d)) " ")
-          ((< a d) "-")
-          ((>= a d) "+"))))
+          ((< a d) (propertize "-" 'face 'ibuffer-git-del-face))
+          ((>= a d) (propertize "+" 'face 'ibuffer-git-add-face)))))
 
 (provide 'ibuffer-git)
 ;;; ibuffer-git.el ends here
