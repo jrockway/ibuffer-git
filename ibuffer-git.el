@@ -32,6 +32,7 @@
 ;;; Code:
 
 (require 'ibuffer)
+(require 'diff-mode)
 (require 'cl)
 
 (defgroup ibuffer-git nil
