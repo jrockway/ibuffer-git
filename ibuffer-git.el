@@ -32,24 +32,24 @@
 ;;; Code:
 
 (require 'ibuffer)
-(require 'cl)
+(require 'cl-lib)
 
 (defgroup ibuffer-git nil
   "Git integration for Ibuffer"
   :group 'ibuffer)
 
-(defun* ibuffer-git-check-status (filename)
+(cl-defun ibuffer-git-check-status (filename)
   "Return a cons cell representing the number of lines added to and removed from FILENAME since the last git commit.  Return NIL if the file is not under git's control (or there is some other error), and `(0 . 0)' if there are no changes.
 
 FILENAME must be a filename."
   (condition-case e
       (let* ((default-directory (file-name-directory filename))
-             (res (car (process-lines "git" "diff" "--numstat"
-                                      (file-name-nondirectory filename)))))
-        (cond ((not res) (cons 0 0))
-              ((string-match "^\\([0-9]+\\)\t\\([0-9]+\\)\t" res)
-               (cons (read (match-string 1 res)) (read (match-string 2 res))))
-              (t nil)))
+	     (res (car (process-lines "git" "diff" "--numstat"
+				      (file-name-nondirectory filename)))))
+	(cond ((not res) (cons 0 0))
+	      ((string-match "^\\([0-9]+\\)\t\\([0-9]+\\)\t" res)
+	       (cons (read (match-string 1 res)) (read (match-string 2 res))))
+	      (t nil)))
     (error nil)))
 
 (defface ibuffer-git-add-face '((t (:inherit (diff-added))))
@@ -70,16 +70,16 @@ FILENAME must be a filename."
 
 Argument RES is a cons cell in the format `(ADD . DEL)'."
   (if (not res) ""
-    (destructuring-bind (add . del) res
+    (cl-destructuring-bind (add . del) res
       (cond ((and (= 0 add) (= 0 del)) "")
-            (t (let* ((add-ratio (/ (float add) (+ add del)))
-                      (plus  (ceiling (* add-ratio ibuffer-git-column-length)))
-                      (minus (- ibuffer-git-column-length plus)))
-                 (concat
-                  (propertize (concat (loop for i from 1 to (min add plus) collect ?+))
-                              'face 'ibuffer-git-add-face)
-                  (propertize (concat (loop for i from 1 to (min del minus) collect ?-))
-                              'face 'ibuffer-git-del-face))))))))
+	    (t (let* ((add-ratio (/ (float add) (+ add del)))
+		      (plus  (ceiling (* add-ratio ibuffer-git-column-length)))
+		      (minus (- ibuffer-git-column-length plus)))
+		 (concat
+		  (propertize (concat (cl-loop for i from 1 to (min add plus) collect ?+))
+			      'face 'ibuffer-git-add-face)
+		  (propertize (concat (cl-loop for i from 1 to (min del minus) collect ?-))
+			      'face 'ibuffer-git-del-face))))))))
 
 (defvar ibuffer-git-status-keymap (make-sparse-keymap)
   "Keymap for clicking on the diffs")
@@ -107,13 +107,13 @@ Argument EVENT is the mouse event that triggered us."
 
 
 (define-ibuffer-column git-status-mini (:name "G" :inline t)
-  (destructuring-bind (a . d)
+  (cl-destructuring-bind (a . d)
       (or (ignore-errors (when (buffer-file-name)
-                           (ibuffer-git-check-status (buffer-file-name))))
-          (cons 0 0))
+			   (ibuffer-git-check-status (buffer-file-name))))
+	  (cons 0 0))
     (cond ((= 0 (+ a d)) " ")
-          ((< a d) (propertize "-" 'face 'ibuffer-git-del-face))
-          ((>= a d) (propertize "+" 'face 'ibuffer-git-add-face)))))
+	  ((< a d) (propertize "-" 'face 'ibuffer-git-del-face))
+	  ((>= a d) (propertize "+" 'face 'ibuffer-git-add-face)))))
 
 (provide 'ibuffer-git)
 ;;; ibuffer-git.el ends here
